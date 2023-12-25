@@ -106,3 +106,16 @@ export async function unarchiveUserNote(Token, id) {
     return error.response.data;
   }
 }
+
+export async function getNoteDetail(Token, id) {
+  try {
+    const response = await axios.get(API.Notes + `/${id}`, {
+      headers: {
+        Authorization: `Bearer ${Token}`,
+      }
+    });
+    return response.data.data;
+  } catch (error) {
+    return error.response.data;
+  }
+}

@@ -7,11 +7,10 @@ function NoteItem({ id, title, createdAt, body, handleDelete, archived, handleAr
   return (
     <div className="flex flex-col border-2 rounded-xl p-4 border-dashed border-black">
      <div className='flex justify-between'>
-        {/* <Link to={`/notes/${id}`} className='fs-5'>{title}</Link> */}
-        <h1>{title}</h1>
+        <Link href={`/notes/${id.split('-')[1]}`} className='fs-5'>{title}</Link>
         <div className='flex'>
-            <MdDeleteForever fontSize={28} onClick={() => handleDelete(id)} />
-            {archived ? <MdOutlineUnarchive fontSize={28} onClick={() => handleUnarchive(id)} /> : <MdOutlineArchive fontSize={28} onClick={() => handleArchive(id)} />}
+            <MdDeleteForever fontSize={28} className='cursor-pointer' onClick={() => handleDelete(id)} />
+            {archived ? <MdOutlineUnarchive fontSize={28} className='cursor-pointer' onClick={() => handleUnarchive(id)} /> : <MdOutlineArchive fontSize={28} className='cursor-pointer' onClick={() => handleArchive(id)} />}
         </div>
      </div>
      <div>{body}</div>

@@ -71,7 +71,7 @@ function Home({ activeNotes, Token }) {
       <main>
         <NotesList displayedNotes={displayedNotes} handleDelete={handleDelete} handleArchive={handleArchive} />
       </main>
-      <CustomAlert alertType={alertType} setAlertType={setAlertType} />
+      {alertType && <CustomAlert alertType={alertType} setAlertType={setAlertType} />}
     </>
   )
 }

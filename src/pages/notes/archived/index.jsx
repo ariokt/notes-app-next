@@ -46,7 +46,7 @@ function Archived({ archivedNotes, Token }) {
           <div>No Urchived Data Available</div>
         }
       </main>
-      <CustomAlert alertType={alertType} setAlertType={setAlertType} />
+      {alertType && <CustomAlert alertType={alertType} setAlertType={setAlertType} />}
     </>
   );
 }

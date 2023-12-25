@@ -2,6 +2,8 @@ import { Alert, Snackbar } from '@mui/material';
 import PropTypes from 'prop-types';
 
 function CustomAlert({ alertType, setAlertType }) {
+  console.log(alertType)
+  const theType = alertType.split('-')[0];
   return (
     <Snackbar
       anchorOrigin={{vertical: 'top', horizontal: 'center' }}
@@ -11,9 +13,7 @@ function CustomAlert({ alertType, setAlertType }) {
     >
       <Alert 
         onClose={() => setAlertType('')}
-        severity={
-          alertType.split('-')[0] === 'success' ? 'success' : 'error'
-        }
+        severity={theType}
         sx={{ width: '100%' }}
       >
         {alertType === 'success-delete' && 'Note berhasil dihapus.'}
