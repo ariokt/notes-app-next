@@ -6,7 +6,6 @@ import { useState } from "react";
 import CustomAlert from '@/components/CustomAlert';
 
 function NoteDetail({ detailNote, Token }) {
-
   const [alertType, setAlertType] = useState('');
   const [archived, setArchived] = useState(detailNote.archived);
 
@@ -34,7 +33,7 @@ function NoteDetail({ detailNote, Token }) {
     <>
       <header className='flex items-center gap-2 mb-4'>
         <Link href="/" ><MdKeyboardBackspace size={32} /></Link>
-        <h1 className='mb-0'>Detail Note {detailNote.id.split('-')[1]}</h1>
+        <h1 className='mb-0'>Detail Note {detailNote.id}</h1>
       </header>
       <main>
         <div className='flex items-center gap-2'>

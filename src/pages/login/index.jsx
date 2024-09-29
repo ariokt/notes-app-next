@@ -1,20 +1,20 @@
 import { MdOutlineGTranslate } from "react-icons/md";
 import { IoMdMoon } from "react-icons/io";
-import useInput from "@/hooks/useInput";
 import Link from "next/link";
-import useToggle from "@/hooks/useToggle";
 import Image from "next/image";
 import ImageEraspace from '../../../public/illustration/astronot.png';
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { loginUser } from "../api/hello";
 import FormLogin from "@/components/FormLogin";
+import { GlobalContext } from "@/hooks/context";
 
 function Login() {
   const router = useRouter();
   const Token = Cookies.get('userToken');
   const [loaded, setLoaded] = useState(false);
+  const { setAlertType } = useContext(GlobalContext);
 
   useEffect(() => {
     if (Token) {
@@ -24,18 +24,20 @@ function Login() {
     }
   }, [router, Token]);
 
-  const handleLogin = async (obj) => {
+  const handleLogin = useCallback(async (obj) => {
     const {email, password} = obj;
     const dataUser = {email, password};
     const response = await loginUser(dataUser);
+
     if (response.status === 'fail') {
-      window.alert(response.message);
+      setAlertType('error-login');
     }
     if (response.status === 'success') {
       Cookies.set('userToken', response.data.accessToken);
+      setAlertType('success-login');
       router.push('/');
     }
-  }
+  }, [setAlertType, router]);
 
   if (!loaded) {
     return <div></div>;

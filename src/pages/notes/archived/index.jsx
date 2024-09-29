@@ -3,16 +3,15 @@ import Link from "next/link";
 import { MdKeyboardBackspace } from "react-icons/md";
 import PropTypes from 'prop-types';
 import NotesList from "@/components/NotesList";
-import { useState } from "react";
+import { useCallback, useContext, useState } from "react";
 import CustomAlert from "@/components/CustomAlert";
+import { GlobalContext } from "@/hooks/context";
 
 function Archived({ archivedNotes, Token }) {
   const [displayedNotes, setDisplayedNotes] = useState(archivedNotes);
-  console.log(displayedNotes)
+  const { alertType, setAlertType } = useContext(GlobalContext);
 
-  const [alertType, setAlertType] = useState('');
-
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     const response = await deleteUserNote(Token, id);
     if (response.status === 'success') {
       setDisplayedNotes((prevDisplayed) => prevDisplayed.filter((note) => note.id !== id));
@@ -20,9 +19,9 @@ function Archived({ archivedNotes, Token }) {
     } else {
       setAlertType('error-delete');
     }
-  }
+  }, [Token, setDisplayedNotes, setAlertType]);
 
-  const handleUnarchive = async (id) => {
+  const handleUnarchive = useCallback(async (id) => {
     const response = await unarchiveUserNote(Token, id);
     if (response.status === 'success') {
       setDisplayedNotes((prevDisplayed) => prevDisplayed.filter((note) => note.id !== id));
@@ -30,7 +29,7 @@ function Archived({ archivedNotes, Token }) {
     } else {
       setAlertType('error-unarchive');
     }
-  }
+  }, [Token, setDisplayedNotes, setAlertType]);
 
   return (
     <>

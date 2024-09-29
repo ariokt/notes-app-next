@@ -1,5 +1,6 @@
 import PropTypes from 'prop-types';
 import NoteItem from './NoteItem';
+import { memo } from 'react';
 
 function NotesList({ displayedNotes, handleDelete, handleArchive, handleUnarchive }) {
 
@@ -21,4 +22,4 @@ NotesList.propTypes = {
   handleUnarchive: PropTypes.func,
 }
 
-export default NotesList;
+export default memo(NotesList);

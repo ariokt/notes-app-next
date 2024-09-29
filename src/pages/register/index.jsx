@@ -2,17 +2,18 @@ import { MdOutlineGTranslate } from "react-icons/md";
 import { IoMdMoon } from "react-icons/io";
 import useInput from "@/hooks/useInput";
 import Link from "next/link";
-import useToggle from "@/hooks/useToggle";
-import { useEffect, useState } from "react";
+import { useCallback, useContext, useEffect, useState } from "react";
 import { useRouter } from "next/router";
 import Cookies from "js-cookie";
 import { registerUser } from "../api/hello";
 import FormRegister from "@/components/FormRegister";
+import { GlobalContext } from "@/hooks/context";
 
 function Register() {
   const router = useRouter();
   const Token = Cookies.get('userToken');
   const [loaded, setLoaded] = useState(false);
+  const { setAlertType } = useContext(GlobalContext);
 
   useEffect(() => {
     if (Token) {
@@ -22,21 +23,21 @@ function Register() {
     }
   }, [router, Token]);
 
-  const handleRegister = async (obj) => {
+  const handleRegister = useCallback(async (obj) => {
     const {name, email, password, confirmPassword} = obj;
     if ( password === confirmPassword) {
       const dataRegister = {name, email, password};
       const response = await registerUser(dataRegister);
       if (response.status === 'success') {
-        window.alert('Registrasi berhasil!');
+        setAlertType('success-register');
         router.push('/login');
       } else {
-        window.alert(response.message);
+        setAlertType('error-register');
       }
     } else {
-      window.alert('Periksa kembali password!');
+      setAlertType('error-password');
     }
-  }
+  }, [setAlertType, router]);
 
   if (!loaded) {
     return <div></div>;

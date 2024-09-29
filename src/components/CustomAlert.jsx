@@ -1,8 +1,9 @@
+import { GlobalContext } from '@/hooks/context';
 import { Alert, Snackbar } from '@mui/material';
-import PropTypes from 'prop-types';
+import { useContext } from 'react';
 
-function CustomAlert({ alertType, setAlertType }) {
-  console.log(alertType)
+function CustomAlert() {
+  const { alertType, setAlertType } = useContext(GlobalContext);
   const theType = alertType.split('-')[0];
   return (
     <Snackbar
@@ -17,19 +18,25 @@ function CustomAlert({ alertType, setAlertType }) {
         sx={{ width: '100%' }}
       >
         {alertType === 'success-delete' && 'Note berhasil dihapus.'}
+        {alertType === 'success-register' && 'Register berhasil.'}
+        {alertType === 'error-register' && 'Register gagal.'}
+        {alertType === 'error-password' && 'Periksa kembali password Anda!'}
+        {alertType === 'success-login' && 'Login berhasil.'}
+        {alertType === 'success-logout' && 'Logout berhasil.'}
+        {alertType === 'error-login' && 'Login gagal, periksa kembali email dan password Anda!'}
         {alertType === 'error-delete' && 'Koneksi bermasalah, gagal menghapus Note!'}
         {alertType === 'success-archive' && 'Archive berhasil.'}
         {alertType === 'error-archive' && 'Archive gagal!'}
         {alertType === 'success-unarchive' && 'Unarchive berhasil.'}
         {alertType === 'error-unarchive' && 'Unarchive gagal!'}
+
+        {alertType === 'success-create-note' && 'Note berhasil dibuat.'}
+        {alertType === 'error-create-note' && 'Note GAGAL dibuat!'}
+        {alertType === 'error-create-note-title' && 'Title tidak boleh kosong!'}
+        {alertType === 'error-create-note-body' && 'Body tidak boleh kosong!'}
       </Alert>
     </Snackbar>
 );
-}
-
-CustomAlert.propTypes = {
-  alertType: PropTypes.string.isRequired,
-  setAlertType: PropTypes.func.isRequired,
 }
 
 export default CustomAlert;

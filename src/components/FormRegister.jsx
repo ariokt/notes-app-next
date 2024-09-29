@@ -2,6 +2,7 @@ import useInput from "@/hooks/useInput";
 import useToggle from "@/hooks/useToggle";
 import { IoIosEyeOff, IoIosEye } from "react-icons/io";
 import PropTypes from 'prop-types';
+import { memo, useCallback } from "react";
 
 function FormRegister({ register }) {
   const [name, handleChangeName] = useInput('');
@@ -12,11 +13,11 @@ function FormRegister({ register }) {
   const [showPassword, handleTogglePassword] = useToggle(false);
   const [showConfirmPassword, handleToggleConfirmPassword] = useToggle(false);
 
-  const handleClickRegister = (e) => {
+  const handleClickRegister = useCallback((e) => {
     e.preventDefault();
     const obj = {name, email, password, confirmPassword}
     register(obj);
-  }
+  }, [name, email, password, confirmPassword, register]);
 
   return (
     <form autoComplete="off" className='flex flex-col gap-3 mb-8'>
@@ -43,4 +44,4 @@ FormRegister.propTypes = {
   register: PropTypes.func.isRequired,
 }
 
-export default FormRegister;
+export default memo(FormRegister);

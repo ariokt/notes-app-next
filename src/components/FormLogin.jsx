@@ -2,6 +2,7 @@ import { IoIosEyeOff, IoIosEye } from "react-icons/io";
 import PropTypes from 'prop-types';
 import useInput from "@/hooks/useInput";
 import useToggle from "@/hooks/useToggle";
+import { memo, useCallback } from "react";
 
 function FormLogin({ login }) {
   const [email, handleChangeEmail] = useInput('');
@@ -9,10 +10,10 @@ function FormLogin({ login }) {
 
   const [showPassword, handleTogglePassword] = useToggle(false);
 
-  const handleClickMasuk = (e) => {
+  const handleClickMasuk = useCallback((e) => {
     e.preventDefault();
     login({email, password});
-  }
+  }, [email, password, login]);
 
   return (
     <form className='flex flex-col gap-3 mb-8'>
@@ -32,4 +33,4 @@ FormLogin.propTypes = {
   login: PropTypes.func.isRequired,
 }
 
-export default FormLogin
+export default memo(FormLogin);

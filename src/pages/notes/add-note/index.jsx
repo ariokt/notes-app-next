@@ -4,43 +4,39 @@ import Link from "next/link";
 import useInput from "@/hooks/useInput";
 import { addUserNote } from "@/pages/api/hello";
 import { useRouter } from "next/router";
-import { Snackbar, Alert, CircularProgress } from "@mui/material";
-import { useState } from "react";
+import { CircularProgress } from "@mui/material";
+import { useCallback, useContext, useState } from "react";
+import { GlobalContext } from "@/hooks/context";
 
 
 function AddNote({ Token }) {
   const router = useRouter();
   const [title, handleChangeTitle] = useInput('');
   const [body, handleChangeBody] = useInput('');
-
-  const [errorSubmit, setErrorSubmit] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
+  const { setAlertType } = useContext(GlobalContext);
 
-  const handleAddNote = async (e) => {
+  const handleAddNote = useCallback(async (e) => {
     e.preventDefault();
     setIsLoading(true);
     const userData = {Token, title, body};
-    if (!errorMessage()) {
+    if (title.length !== 0 && body.length !== 0) {
       const response = await addUserNote(userData);
       if (response.status === 'success') {
+        setAlertType('success-create-note');
         router.push('/');
       } else {
-        setErrorSubmit(true);
+        setAlertType('error-create-note');
       }
     } else {
-      setErrorSubmit(true);
+      if (title.length === 0) {
+        setAlertType('error-create-note-title');
+      } else if (body.length === 0) {
+        setAlertType('error-create-note-body');
+      }
     }
     setIsLoading(false);
-  }
-
-  const errorMessage = () => {
-    if (title.length === 0) {
-      return 'Mohon untuk isi title!';
-    }
-    if (body.length === 0) {
-      return 'Mohon untuk isi body!'
-    }
-  }
+  }, [Token, title, body, setAlertType, router]);
 
   return (
     <>
@@ -59,16 +55,6 @@ function AddNote({ Token }) {
           }
         </form>
       </main>
-      <Snackbar
-        anchorOrigin={{vertical: 'top', horizontal: 'center' }}
-        open={errorSubmit}
-        autoHideDuration={3000}
-        onClose={() => setErrorSubmit(false)}
-      >
-        <Alert onClose={() => setErrorSubmit(false)} severity="error" sx={{ width: '100%' }}>
-          {errorMessage() || 'Koneksi bermasalah, mohon ulangi!'}
-        </Alert>
-      </Snackbar>
     </>
   );
 }

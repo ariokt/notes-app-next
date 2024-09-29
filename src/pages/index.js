@@ -1,29 +1,29 @@
 import { Inter } from 'next/font/google';
 import { archiveUserNote, deleteUserNote, getActiveNotes } from './api/hello';
 import PropTypes from 'prop-types';
-import { IoIosAddCircleOutline, IoMdMoon, IoMdSunny } from "react-icons/io";
+import { IoIosAddCircleOutline, IoMdMoon } from "react-icons/io";
 import { MdOutlineArchive, MdLogout, MdOutlineGTranslate } from "react-icons/md";
 import Link from 'next/link';
 import Cookies from 'js-cookie';
 import { useRouter } from 'next/router';
 import NotesList from '@/components/NotesList';
-import { useState } from 'react';
-import CustomAlert from '@/components/CustomAlert';
+import { useCallback, useContext, useState } from 'react';
+import { GlobalContext } from '@/hooks/context';
 
 const inter = Inter({ subsets: ['latin'] })
 
 function Home({ activeNotes, Token }) {
   const router = useRouter();
   const [displayedNotes, setDisplayedNotes] = useState(activeNotes);
-
-  const [alertType, setAlertType] = useState('');
+  const { setAlertType } = useContext(GlobalContext);
   
-  const handleLogout = () => {
+  const handleLogout = useCallback(() => {
     Cookies.remove('userToken');
+    setAlertType('success-logout');
     router.push('/login');
-  }
+  }, [router]);
 
-  const handleDelete = async (id) => {
+  const handleDelete = useCallback(async (id) => {
     const response = await deleteUserNote(Token, id);
     if (response.status === 'success') {
       setDisplayedNotes((prevDisplayed) => prevDisplayed.filter((note) => note.id !== id));
@@ -31,9 +31,9 @@ function Home({ activeNotes, Token }) {
     } else {
       setAlertType('error-delete');
     }
-  }
+  }, [Token, setDisplayedNotes, setAlertType]);
 
-  const handleArchive = async (id) => {
+  const handleArchive = useCallback(async (id) => {
     const response = await archiveUserNote(Token, id);
     if (response.status === 'success') {
       setDisplayedNotes((prevDisplayed) => prevDisplayed.filter((note) => note.id !== id));
@@ -41,12 +41,12 @@ function Home({ activeNotes, Token }) {
     } else {
       setAlertType('error-archive');
     }
-  }
+  }, [Token, setDisplayedNotes, setAlertType]);
 
   return (
     <>
-      <header className='flex items-center p-4 justify-between'>
-        <div className='flex flex-col md:flex-row md:gap-2'>
+      <header className='flex flex-col md:flex-row items-center p-4 justify-between'>
+        <div className='flex flex-col md:flex-row md:gap-2 mb-2'>
           <h1 className='text-2xl'>Dicoding Notes App</h1>
           <div className='flex gap-2 justify-center items-center'>
             <MdOutlineGTranslate style={{fontSize:"32px"}} />
@@ -71,7 +71,6 @@ function Home({ activeNotes, Token }) {
       <main>
         <NotesList displayedNotes={displayedNotes} handleDelete={handleDelete} handleArchive={handleArchive} />
       </main>
-      {alertType && <CustomAlert alertType={alertType} setAlertType={setAlertType} />}
     </>
   )
 }
